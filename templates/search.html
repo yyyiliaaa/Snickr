@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snickr</title>
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script  src="js/jquery.params.js"></script>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" id="main" href="main.html">Snickr</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="profile.html" id="profile">Username</a></li>
+                    <li><a href="javascript:logout()">Logout</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav><!-- navbar-->
+
+    <div class="jumbotron">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchcontent">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="javascript:search()">Search</button>
+                    </span>
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+        <br>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Search Result</div>
+            <br>
+            <div id="resultlist">
+
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var email = $.query.get("email");
+function search() {
+    var key = $("#searchcontent").val();
+    var email = $.query.get("email");
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/search",
+        dataType: "json",
+        data: JSON.stringify({
+            uemail: email, key: key
+        }),
+        success: function (result) {
+            if(result.status!=0){
+                h = '';
+                h1 = '<div class="media">'+
+                    '<div class="media-left">'+
+                    '<img src="https://static.runoob.com/images/mix/img_avatar.png" class="media-object" style="width:60px">'+
+                    '</div>'+
+                    '<div class="media-body">' +
+                    '<h4 class="media-heading">'
+
+                for (let i=0,len = result.messagelist.length;i<len;i++){
+                    h = h+h1;
+                    h = h+result.ulist[i]+'\t'
+                    h = h+'<small>'+result.messagelist[i].sendtime+'</small>\t@\t'
+                    h = h+result.cnamelist[i]+'</h4><p>'
+                    h = h+result.messagelist[i].content+'</p></div></div>'
+                }
+
+                $('#resultlist').html(h);
+            }
+        	else{
+        	    alert(result.message);
+            }
+
+
+        }
+    });
+}
+
+function logout(){
+  $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/logout",
+        dataType: "json",
+        data: JSON.stringify({ uemail: email}),
+        success: function(result) {
+            if(result.status!=0){
+                window.location.href="index.html";
+                alert("Logout Successfully!")
+        	}
+        	else{
+        	    alert(result.message);
+            }
+
+        }
+    });
+}
+
+</script>
+
+<script type="text/javascript">
+
+	$("#profile").text(email);
+	$("#main").attr('href','main.html?email='+email);
+	$("#invitation").attr('href','invitation.html?email='+email)
+    $("#search").attr('href','search.html?email='+email)
+    $("#profile").attr('href','profile.html?email='+email)
+
+</script>
+
+
+</body>
+</html>

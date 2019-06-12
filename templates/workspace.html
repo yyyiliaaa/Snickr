@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snickr</title>
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script  src="js/jquery.params.js"></script>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" id="main" href="main.html">Snickr</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a id="create" data-toggle="modal" data-target="#createc" data-backdrop="false" data-keyboard="false">Create Channel</a></li>
+                    <li><a id="invite" data-toggle="modal" data-target="#invitew" data-backdrop="false" data-keyboard="false">Invite Members</a></li>
+                    <li><a href="invitation.html" id="invitation">Invitation</a></li>
+                    <li><a href="search.html" id="search">Search</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="profile.html" id="profile">Username</a></li>
+                    <li><a href="javascript:logout()">Logout</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav><!-- navbar-->
+
+    <div class="jumbotron">
+        <div class="panel panel-default">
+            <div class="panel-heading">Channels in this Workspace</div>
+            <div class=" table-responsive">
+                <table class="table table-hover table-responsive">
+                    <thead>
+                    <tr>
+                        <th>Go to Channel</th>
+                        <th>Channel Name</th>
+                        <th>Type</th>
+                    </tr>
+                    </thead>
+                    <tbody id="channel-table-responsive-body">
+                    <tr>
+                        <td>
+                            <button class="btn btn-info btn-xs">Go</button>
+                        </td>
+                        <td>A</td>
+                        <td>B</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Users in this Workspace</div>
+            <div class=" table-responsive">
+                <table class="table table-hover table-responsive">
+                    <thead>
+                    <tr>
+                        <th>User name</th>
+                        <th>Nickname</th>
+                        <th>Admin Operation</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody id="user-table-responsive-body">
+                    <tr>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>
+                            <button class="btn btn-info btn-xs">admin</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-xs">delete</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="createc" style="vertical-align: middle;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Create Channel</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" action="/submit-">
+                    <div class="form-group">
+                        <label for="name" class="col-lg-2 control-label">Channel Name</label>
+                        <div class="col-lg-9">
+                            <input type="text" class="form-control" id="cname" placeholder="Please input the name of channel">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="name" class="col-lg-2 control-label">Channel Type</label>
+                        <div class="col-lg-9">
+                            <select class="form-control" id="type">
+                                <option>public</option>
+                                <option>private</option>
+                                <option>direct</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" onclick="Create()" data-dismiss="modal" >Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="invitew" style="vertical-align: middle;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Invite Members to Workspace</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" action="/submit-">
+                    <div class="form-group">
+                        <label for="description" class="col-lg-2 control-label">Invitee email</label>
+                        <div class="col-lg-9">
+                            <textarea class="form-control" rows="3" id="invitee" placeholder="Invitee email address"></textarea>
+                            <span class="help-block">Input the email address of invitees. Seperate with return(enter). </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" onclick="Invite()" data-dismiss="modal" >Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+	var email = $.query.get("email");
+	var wid = $.query.get("wid");
+	$.ajax({
+        type:"post",
+        url:"http://127.0.0.1:5000/workspace",
+        cache:false,
+        //async:false,
+        dataType:"json",
+        data:JSON.stringify({uemail: email,wid:wid}),
+        success: function(result) {
+        	if(result.status!=0){
+            h1 = '';
+            for (let i=0,len = result.clist.length;i<len;i++){
+                console.log(result.clist[i]);
+                h1 = h1+'<tr>';
+                h1 = h1+'<td><a href="channel.html?email='+email+'&cid='+result.clist[i].cid+'"><button type="button" class="btn btn-link">Go</button></a></td>';
+                h1 = h1+'<td>'+result.clist[i].cname+'</td>';
+                h1 = h1+'<td>'+result.clist[i].ctype+'</td>';
+                h1 = h1+'</tr>';
+            }
+
+            $('#channel-table-responsive-body').html(h1);
+
+            h2 = '';
+
+            for (let j=0,len = result.ulist.length;j<len;j++){
+
+                h2 = h2+'<tr>';
+                h2 = h2+'<td>'+result.ulist[j].uname+'</td>';
+                h2 = h2+'<td>'+result.ulist[j].nickname+'</td>';
+                console.log(result.creator);
+                console.log(result.statuslist);
+                button1 = '<td><button class="btn btn-info btn-xs" disabled="disabled">Assign Admin</button></td>';
+                button2 = '<td><button class="btn btn-info btn-xs" disabled="disabled">Delete</button></td>';
+
+                if(result.creator == 1 && result.statuslist[j] == 2){
+                    button2 = '<td><button class="btn btn-info btn-xs" onclick="javascript:Delete('+result.ulist[j].uid+')">Delete</button></td>';
+                }
+                else if(result.creator == 0 && result.statuslist[j] == 1)
+                {
+                    button1 = '<td><button class="btn btn-info btn-xs" onclick="javascript:Remove('+result.ulist[j].uid+')">Remove Admin</button></td>';
+                    button2 = '<td><button class="btn btn-info btn-xs" onclick="javascript:Delete('+result.ulist[j].uid+')">Delete</button></td>';
+                }
+                else if(result.creator == 0 && result.statuslist[j] == 2)
+                {
+                    button1 = '<td><button class="btn btn-info btn-xs" onclick="javascript:Assign('+result.ulist[j].uid+')">Assign Admin</button></td>';
+                    button2 = '<td><button class="btn btn-info btn-xs" onclick="javascript:Delete('+result.ulist[j].uid+')">Delete</button></td>';
+                }
+
+                h2 = h2+button1+button2;
+                h2 = h2+'</tr>';
+                console.log(h2);
+            }
+
+            $('#user-table-responsive-body').html(h2);
+        	}
+        	else{
+        	    alert(result.message);
+            }
+        }
+    });
+function Assign(uid) {
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/assignadmin",
+        dataType: "json",
+        data: JSON.stringify({
+            wid: wid, uid: uid, uemail: email
+        }),
+        success: function (result) {
+            if(result.status!=0){
+                alert(result.message);
+                location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+
+        }
+    });
+}
+function Remove(uid) {
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/removeadmin",
+        dataType: "json",
+        data: JSON.stringify({
+            wid: wid, uid: uid, uemail: email
+        }),
+        success: function (result) {
+            if(result.status!=0){
+                alert(result.message);
+                location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+        }
+    });
+}
+function Delete(uid) {
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/wdeleteuser",
+        dataType: "json",
+        data: JSON.stringify({
+            wid: wid, uid:uid, uemail: email
+        }),
+        success: function (result) {
+            if(result.status!=0){
+                alert(result.message);
+                location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+        }
+    });
+}
+function Create() {
+    var name = $("#cname").val();
+    var type = $("#type").val();
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/createchannel",
+        cache:false,
+        async:false,
+        dataType: "json",
+        data: JSON.stringify({uemail: email, wid:wid, cname:name, ctype:type}),
+        success: function (result) {
+            if(result.status!=0){
+                alert(result.message);
+                location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+        }
+    });
+}
+function Invite() {
+    var invitee = $("#invitee").val();
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/inviteworkspace",
+        cache:false,
+        async:false,
+        dataType: "json",
+        data: JSON.stringify({uemail: email, wid:wid, invitee:invitee}),
+        success: function (result) {
+            if(result.status!=0){
+                alert(result.message);
+                location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+        }
+    });
+}
+
+function logout(){
+  $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/logout",
+        dataType: "json",
+        data: JSON.stringify({ uemail: email}),
+        success: function(result) {
+            if(result.status!=0){
+                window.location.href="index.html";
+                alert("Logout Successfully!")
+        	}
+        	else{
+        	    alert(result.message);
+            }
+        }
+    });
+}
+
+</script>
+
+<script type="text/javascript">
+
+	$("#profile").text(email);
+	$("#main").attr('href','main.html?email='+email);
+	$("#invitation").attr('href','invitation.html?email='+email);
+    $("#search").attr('href','search.html?email='+email);
+    $("#profile").attr('href','profile.html?email='+email);
+
+</script>
+
+
+</body>
+</html>

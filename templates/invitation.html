@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Snickr</title>
+	<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script  src="js/jquery.params.js"></script>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" id="main" href="main.html">Snickr</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="invitation.html" id="invitation">Invitation</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="profile.html" id="profile">Username</a></li>s
+                    <li><a href="javascript:logout()">Logout</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav><!-- navbar-->
+
+    <div class="jumbotron">
+        <div class="panel panel-default">
+            <div class="panel-heading">Invitations to Workspace</div>
+            <div class=" table-responsive">
+                <table class="table table-hover table-responsive">
+                    <thead>
+                    <tr>
+                        <th>Invitor</th>
+                        <th>Workspace</th>
+                        <th>Invite time</th>
+                        <th>Accept</th>
+                        <th>Reject</th>
+                    </tr>
+                    </thead>
+                    <tbody id="workspace-table-responsive-body">
+                    <tr>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>C</td>
+                        <td>
+                            <button class="btn btn-success btn-xs">Accept</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-xs">Reject</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Invitation to Channel</div>
+            <div class=" table-responsive">
+                <table class="table table-hover table-responsive">
+                    <thead>
+                    <tr>
+                        <th>Invitor</th>
+                        <th>Channel</th>
+                        <th>Invite time</th>
+                        <th>Accept</th>
+                        <th>Reject</th>
+                    </tr>
+                    </thead>
+                    <tbody id="channel-table-responsive-body">
+                    <tr>
+                        <td>A</td>
+                        <td>B</td>
+                        <td>C</td>
+                        <td>
+                            <button class="btn btn-success btn-xs">Accept</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-xs">Reject</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+	var email = $.query.get("email");
+	$.ajax({
+        type:"post",
+        url:"http://127.0.0.1:5000/showinvitation",
+        cache:false,
+        //async:false,
+        dataType:"json",
+        data:JSON.stringify({uemail: email}),
+        success: function(result) {
+        	if(result.status!=0){
+        		h1 = '';
+            for (let i=0,len = result.winvitationlist.length;i<len;i++){
+                h1 = h1+'<tr>';
+                h1 = h1+'<td>'+result.winvitorlist[i].uname+'</td>';
+                h1 = h1+'<td>'+result.workspacelist[i].wname+'</td>';
+                h1 = h1+'<td>'+result.winvitationlist[i].winvitetime+'</td>';
+                h1 = h1+'<td><button class="btn btn-success btn-xs" onclick="javascript:WAccept('+result.workspacelist[i].wid+')">Accept</button></td>';
+                h1 = h1+'<td><button class="btn btn-danger btn-xs" onclick="javascript:WReject('+result.workspacelist[i].wid+')">Reject</button></td>';
+                h1 = h1+'</tr>';
+
+            }
+
+            $('#workspace-table-responsive-body').html(h1);
+
+            h2 = '';
+
+            for (let j=0,len = result.cinvitationlist.length;j<len;j++){
+                h2 = h2+'<tr>';
+                h2 = h2+'<td>'+result.cinvitorlist[j].uname+'</td>';
+                h2 = h2+'<td>'+result.channellist[j].cname+'</td>';
+                h2 = h2+'<td>'+result.cinvitationlist[j].cinvitetime+'</td>';
+                h2 = h2+'<td><button class="btn btn-success btn-xs" onclick="javascript:CAccept('+result.cinvitationlist[j].cid+','+
+                        result.cinvitationlist[j].cinviteeid+')">Accept</button></td>';
+                h2 = h2+'<td><button class="btn btn-danger btn-xs" onclick="javascript:CReject('+result.cinvitationlist[j].cid+','+
+                        result.cinvitationlist[j].cinviteeid+')">Reject</button></td>';
+                h2 = h2+'</tr>';
+
+            }
+
+            $('#channel-table-responsive-body').html(h2);
+
+        	}
+        	else{
+        	    alert(result.message);
+            }
+
+        }
+    });
+function WAccept(wid) {
+    var email = $.query.get("email");
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/WAccept",
+        dataType: "json",
+        data: JSON.stringify({
+            uemail: email, wid: wid
+        }),
+        success: function (result) {
+            if(result.status!=0){
+        		alert(result.message);
+            location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+
+        }
+    });
+}
+function WReject(wid) {
+    var email = $.query.get("email");
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/WReject",
+        dataType: "json",
+        data: JSON.stringify({
+            uemail: email, wid: wid
+        }),
+        success: function (result) {
+            if(result.status!=0){
+        		alert(result.message);
+            location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+
+        }
+    });
+}
+function CAccept(cid,uid) {
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/CAccept",
+        dataType: "json",
+        data: JSON.stringify({
+            cid: cid, uid: uid, uemail: email
+        }),
+        success: function (result) {
+            if(result.status!=0){
+        		alert(result.message);
+            location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+
+        }
+    });
+}
+function CReject(cid, uid) {
+    $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/CReject",
+        dataType: "json",
+        data: JSON.stringify({
+            cid: cid, uid: uid, uemail: email
+        }),
+        success: function (result) {
+            if(result.status!=0){
+        		alert(result.message);
+            location.reload();
+        	}
+        	else{
+        	    alert(result.message);
+            }
+
+        }
+    });
+}
+
+function logout(){
+  $.ajax({
+        type: "post",
+        url: "http://127.0.0.1:5000/logout",
+        dataType: "json",
+        data: JSON.stringify({ uemail: email}),
+        success: function(result) {
+            if(result.status!=0){
+        		window.location.href="index.html";
+            alert("Logout Successfully!")
+        	}
+        	else{
+        	    alert(result.message);
+            }
+
+        }
+    });
+}
+
+</script>
+
+<script type="text/javascript">
+
+	$("#profile").text(email);
+	$("#main").attr('href','main.html?email='+email);
+	$("#invitation").attr('href','invitation.html?email='+email);
+	$("#profile").attr('href','profile.html?email='+email);
+
+</script>
+
+
+</body>
+</html>
